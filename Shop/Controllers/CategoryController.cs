@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Data;
 using Shop.Models;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Shop.Controllers
 {
@@ -13,7 +15,8 @@ namespace Shop.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<Category> list = _context.Category;
+            return View(list);
         }
 
         [HttpGet]
