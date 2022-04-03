@@ -37,5 +37,68 @@ namespace Shop.Controllers
 
             return View(category);
         }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if(id== null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var category = _context.Category.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+        [HttpPost]
+        public IActionResult Edit(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Category.Update(category);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(category);
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var category = _context.Category.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Category category)
+        {
+            var categoryForDelete = _context.Category.Find(category.Id);
+
+            if (categoryForDelete == null)
+            {
+                return NotFound();
+            }
+
+            else
+            {
+                _context.Category.Remove(categoryForDelete);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+        }
     }
 }
