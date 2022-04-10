@@ -81,5 +81,42 @@ namespace Shop.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if(id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Product product = _context.Product.Include(c => c.Category).FirstOrDefault(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteProduct(int? id)
+        {
+            var product = _context.Product.Find(id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+            string upload = _webHostEnvironment.WebRootPath + ENV.ImagePath;
+            var oldImage = Path.Combine(upload, product.Image);
+
+            if (System.IO.File.Exists(oldImage))
+            {
+                System.IO.File.Delete(oldImage);
+            }
+
+            _context.Remove(product);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
