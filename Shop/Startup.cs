@@ -26,6 +26,14 @@ namespace Shop
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHttpContextAccessor();
+            services.AddSession(Options =>
+            {
+                Options.IdleTimeout = TimeSpan.FromDays(1);
+                Options.Cookie.HttpOnly = true;
+                Options.Cookie.IsEssential = true;
+            }
+            );
             services.AddControllersWithViews();
         }
 
@@ -45,7 +53,7 @@ namespace Shop
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
